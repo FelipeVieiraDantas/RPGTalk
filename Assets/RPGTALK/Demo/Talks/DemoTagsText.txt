@@ -1,5 +1,5 @@
-[title=cutscene1-begin]
-FunnyGuy: [dub=0]hum hum hummm... hum hum humm... hum hum huhum hum hummmm...
+[title=cutscene1-begin] 
+FunnyGuy: [dub=0]hum hum hummm... hum hum humm... \n hum hum huhum hum hummmm...
 *PlayerName*: [dub=1]Cof, Cof
 FunnyGuy: Oh, I'm sorry. I haven't seen you there. What can I help you?
 *PlayerName*: I'm here to learn about tags in RPGTalk!
@@ -19,14 +19,22 @@ FunnyGuy: Well... Why don't you talk to the girl on the other room?
 FunnyGuy: [dub=0]hum hum hummm... hum hum humm... hum hum huhum hum hummmm...
 [title=cutscene1-end]
 
-
 [title=cutscene2-begin]
-*PlayerName*: So... I heard you can tell more about Choices or Languages?
+*PlayerName*: [expression=cry]So... I heard you can tell more about Choices or Languages?
 Girl: Of course! You can now change language easily using  [sprite=0] RPGTalkLocalization.
-Girl: It doesn't even need to be something inside RPGTalk! You can use  [sprite=1] RPGTalkLocalizationString to change any UI Text.
+Girl: [expression=cry]It doesn't even need to be something inside RPGTalk! You can use  [sprite=1] RPGTalkLocalizationString to change any UI Text.
 *PlayerName*: Looks amazing! How can I test it?
 Girl: [question=0]You wanted to know about choices? So choose your language:
 [choice]American English
 [choice]Brazilian Portuguese
 Girl: Bada-bin-bada-bum, when this talk ends, you have everything in your choosed language!
+[save start=savedPorra break=savedPorraEnd data=0 mod=0]
 [title=cutscene2-end]
+
+[title=languageUI]
+Current Language: American English
+
+
+[title=savedPorra]
+Você escolheu ingleeeeeeees
+[title=savedPorraEnd]

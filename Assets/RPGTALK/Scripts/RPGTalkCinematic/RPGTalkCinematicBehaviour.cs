@@ -29,6 +29,13 @@ public class RPGTalkCinematicBehaviour : PlayableBehaviour
 	bool m_enablePass = true;
 	RPGTalkTimeline rpgTime;
 
+    //AutoPass
+    public bool autoPass;
+    public float secondsAutoPass;
+    double[] startTime;
+
+    Playable playableObj;
+
 
 	//Each frame of the behaviour
 	public override void ProcessFrame (Playable playable, FrameData info, object playerData)
@@ -46,24 +53,59 @@ public class RPGTalkCinematicBehaviour : PlayableBehaviour
 			m_TrackBinding.actualTextSpeed = textSpeed;
 		}
 
-		//The current character will be calculated based on the textspeed and the time of the playable
-		float currentChar = m_TrackBinding.actualTextSpeed * (float)playable.GetTime();
+
+        if(m_TrackBinding.cutscenePosition > m_TrackBinding.rpgtalkElements.Count)
+        {
+            m_TrackBinding.cutscenePosition = m_TrackBinding.rpgtalkElements.Count;
+        }
+
+
+        //The current character will be calculated based on the textspeed and the time of the playable
+        float currentChar = m_TrackBinding.actualTextSpeed * (float)(playable.GetTime() - startTime[m_TrackBinding.cutscenePosition - 1] );
 
 
 
 
-		//only change it if there is something new to change and we are not paused
-		if (m_TrackBinding.rpgtalkElements.Count >m_TrackBinding.cutscenePosition - 1 &&
-			Mathf.Min (currentChar, m_TrackBinding.rpgtalkElements [m_TrackBinding.cutscenePosition - 1].dialogText.Length)
-			!= m_TrackBinding.currentChar) {
-			if (!rpgTime || !rpgTime.isPaused) {
-				m_TrackBinding.currentChar = currentChar;
-				m_TrackBinding.PutRightTextToShow ();
-			}
-		}
 
-		//If we reached the final, check if we should pause the timeline until the player finish the talk
-		if (playable.GetTime () >= playable.GetDuration () - (double)0.1) {
+
+
+        if (currentChar >= 0)
+        {
+            //only change it if there is something new to change and we are not paused
+            if (Mathf.Min(currentChar, m_TrackBinding.rpgtalkElements[m_TrackBinding.cutscenePosition - 1].dialogText.Length)
+            != m_TrackBinding.currentChar && (!rpgTime || !rpgTime.isPaused))
+            {
+                m_TrackBinding.currentChar = currentChar;
+                m_TrackBinding.PutRightTextToShow();
+            }
+        }
+
+        //if we are autopassing it
+        if (autoPass)
+        {
+            //If we still have more in that talk...
+            if (m_TrackBinding.cutscenePosition < m_TrackBinding.rpgtalkElements.Count)
+            {
+                //If we passed the time that the last character on that cutscene should have been seen
+                if (playable.GetTime() >= startTime[m_TrackBinding.cutscenePosition])
+                {
+                    m_TrackBinding.cutscenePosition++;
+                }
+            }
+            else
+            {
+                //If, for some reason, we are playing the timeline backwards...
+                if (m_TrackBinding.cutscenePosition > 1 && playable.GetTime() < startTime[m_TrackBinding.cutscenePosition - 1])
+                {
+                    m_TrackBinding.cutscenePosition--;
+                }
+            }
+        }
+
+
+
+        //If we reached the final, check if we should pause the timeline until the player finish the talk
+        if (playable.GetTime () >= playable.GetDuration () - (double)0.1) {
 			if (!reachedFinal) {
 				reachedFinal = true;
 				if(pauseUntilTalkEnd){
@@ -87,7 +129,7 @@ public class RPGTalkCinematicBehaviour : PlayableBehaviour
 
 		if (!m_FirstFrameHappened)
 		{
-			//on the firs frame, set the defaults to recover after
+			//on the first frame, set the defaults to recover after
 			m_txtToParse = m_TrackBinding.txtToParse;
 			m_lineToBreak = m_TrackBinding.lineToBreak;
 			m_lineToStart = m_TrackBinding.lineToStart;
@@ -102,8 +144,13 @@ public class RPGTalkCinematicBehaviour : PlayableBehaviour
 
 			//If we won't wait for player action to finish, only one line (line to start) will be allowed.
 			if (!pauseUntilTalkEnd) {
-				m_TrackBinding.lineToBreak = lineToStart;
-				m_TrackBinding.enablePass = false;
+                //If we didn't set neither pauseUntilTalkEnd or autoPass, then we can't have lineToBreak.
+                if (!autoPass) {
+                    m_TrackBinding.lineToBreak = lineToStart;
+                }else{
+                    m_TrackBinding.lineToBreak = lineToBreak;
+                }
+                    m_TrackBinding.enablePass = false;
 			} else {
 				m_TrackBinding.enablePass = true;
 				m_TrackBinding.lineToBreak = lineToBreak;
@@ -115,12 +162,30 @@ public class RPGTalkCinematicBehaviour : PlayableBehaviour
 			m_FirstFrameHappened = true;
 			m_TrackBinding.NewTalk ();
 
-			//Put an event for the end of the talk
-			m_TrackBinding.OnEndTalk += OnEndTalk;
+            startTime = new double[m_TrackBinding.rpgtalkElements.Count];
+            for(int i = 0; i < m_TrackBinding.rpgtalkElements.Count; i++)
+            {
+                if(i == 0)
+                {
+                    startTime[i] = 0;
+                }
+                else
+                {
+                    startTime[i] = (m_TrackBinding.rpgtalkElements[i-1].dialogText.Length
+                / m_TrackBinding.actualTextSpeed) + secondsAutoPass;
+                }
+
+            }
+
+
+            //Put an event for the end of the talk
+            m_TrackBinding.OnEndTalk += OnEndTalk;
 
 			if (m_TrackBinding.GetComponent<RPGTalkTimeline> ()) {
 				rpgTime = m_TrackBinding.GetComponent<RPGTalkTimeline> ();
 			}
+
+            playableObj = playable;
 
 		}
 
@@ -171,6 +236,5 @@ public class RPGTalkCinematicBehaviour : PlayableBehaviour
 			}
 		}
 	}
-
 
 }

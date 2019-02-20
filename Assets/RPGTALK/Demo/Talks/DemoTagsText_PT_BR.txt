@@ -30,3 +30,6 @@ Girl: [question=0]Você queria saber sobre escolhas? Escolha sua língua:
 [choice]Português Brasileiro
 Girl: Bada-bin-bada-bum, quando essa conversa acabar, você vai ter tudo na sua língua escolhida!
 [title=cutscene2-end]
+
+[title=languageUI]
+Língua Atual: Português Brasileiro

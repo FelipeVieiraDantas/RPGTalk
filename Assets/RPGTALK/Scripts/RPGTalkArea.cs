@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Playables;
 
 [AddComponentMenu("Seize Studios/RPGTalk/RPGTalk Area")]
@@ -22,21 +23,24 @@ public class RPGTalkArea : MonoBehaviour {
 	/// What is the key that should be used to interact? You can override the Update function and write your 
 	/// own conditions, if needed
 	/// </summary>
-	public KeyCode interactionKey = KeyCode.E;
-	bool canInteract;
+	public KeyCode interactionKey = KeyCode.None;
+    /// <summary>
+    /// What button, set in the Input Settings, should interact with the area
+    /// </summary>
+    public string interactionButton;
+    /// <summary>
+    /// Should the are interact when the player clicks with the left button of the mouse?
+    /// </summary>
+    public bool interactWithMouse;
+    bool canInteract;
 	/// <summary>
 	/// The talk will only begin if someone with this tag hits it. Leave blank to accept anyone
 	/// </summary>
 	public string checkIfColliderHasTag = "";
-	/// <summary>
-	/// A callback script might be called before the talk happens. Useful to freeze player's controller, for instance.
-	/// Leave blank if nothing is needed
-	/// </summary>
-	public MonoBehaviour callbackScriptBeforeTalk;
-	/// <summary>
-	/// What funcition of the callbackScriptBeforeTalk should be called?
-	/// </summary>
-	public string callbackFunctionBeforeTalk;
+    /// <summary>
+    /// A series of events to be called before the talk starts
+    /// </summary>
+    public UnityEvent callbackBeforeTalk;
 	/// <summary>
 	/// What line to start the talk
 	/// </summary>
@@ -49,15 +53,10 @@ public class RPGTalkArea : MonoBehaviour {
 	/// The text file to be parsed into the talks. Leave empty if it is the same as the rpgtalkTarget
 	/// </summary>
 	public TextAsset txtToParse;
-	/// <summary>
-	/// A callback script might be called after the talk happens. Useful to unfreeze player's controller, for instance.
-	/// Leave blank if nothing is needed
-	/// </summary>
-	public MonoBehaviour callbackScriptAfterTalk;
-	/// <summary>
-	/// What funcition of the callbackScriptAfterTalk should be called?
-	/// </summary>
-	public string callbackFunctionAfterTalk;
+    /// <summary>
+    /// Overwrite the variable callback on RPGTalk. Leave empty if no ovewrite is wanted
+    /// </summary>
+    public UnityEvent overwriteCallbackAfterTalk;
 	/// <summary>
 	/// Should this talk/interaction be available only once?
 	/// </summary>
@@ -87,20 +86,46 @@ public class RPGTalkArea : MonoBehaviour {
 	/// The timeline director can be played with the same rules as the talk.
 	/// </summary>
 	public PlayableDirector timelineDirectorToPlay;
+    /// <summary>
+    /// Save (With RPGTAlkSaveInstance on RPGTalk Holder), if this area has already happened. The name of the object will be the saveData value.
+    /// </summary>
+    public bool saveAlreadyHappened;
+    /// <summary>
+    /// Should the talk pass itself?
+    /// </summary>
+    public bool autoPass = false;
+    /// <summary>
+    /// How many seconds should RPGTalk wait after the animation stopped to autoPass
+    /// </summary>
+    public float secondsAutoPass = 3f;
 
-	/// <summary>
-	/// Hide anything that shouldn't be showing upon the start
-	/// </summary>
-	protected virtual void Start () {
+    ///<summary>
+    /// If it has a RPGTalkFollowCharacter, should it be contained inside the screen?
+    /// </summary>
+    public bool containInsideScreen;
+
+    /// <summary>
+    /// Hide anything that shouldn't be showing upon the start
+    /// </summary>
+    protected virtual void Start () {
 		HideInteractionInstruction ();
-	}
+        if (saveAlreadyHappened)
+        {
+            if (rpgtalkTarget.saveInstance)
+            {
+                alreadyHappened = rpgtalkTarget.saveInstance.GetSavedData(name, 1);
+            }
+        }
+    }
 	
 	/// <summary>
 	/// Check for the interaction. Override this method to implement your own rules
 	/// </summary>
 	protected virtual void Update () {
 		if (shouldInteractWithButton && canInteract) {
-			if (Input.GetKeyDown (interactionKey)) {
+			if ((interactionKey != KeyCode.None && Input.GetKeyDown (interactionKey)) || 
+            (interactionButton != "" && Input.GetButtonDown(interactionButton)) || 
+                (interactWithMouse && Input.GetMouseButtonDown(0)) ) {
 				StartTalk ();
 			}
 		}
@@ -115,21 +140,33 @@ public class RPGTalkArea : MonoBehaviour {
 		}
 
 		alreadyHappened = true;
-		if (callbackScriptBeforeTalk != null) {
-			callbackScriptBeforeTalk.Invoke (callbackFunctionBeforeTalk, 0);
-		}
+        if (saveAlreadyHappened)
+        {
+            if (rpgtalkTarget.saveInstance)
+            {
+                rpgtalkTarget.saveInstance.SaveData(name, 1);
+            }
+        }
+
+
+        callbackBeforeTalk.Invoke();
 		TextAsset newTxt = rpgtalkTarget.txtToParse;
 		if (txtToParse != null) {
 			newTxt = txtToParse;
 		}
 
 		rpgtalkTarget.shouldStayOnScreen = shouldStayOnScreen;
+        rpgtalkTarget.autoPass = autoPass;
+        rpgtalkTarget.secondsAutoPass = secondsAutoPass;
 
-		if (callbackScriptAfterTalk == null) {
-			rpgtalkTarget.NewTalk (lineToStart, lineToBreak, newTxt);
-		} else {
-			rpgtalkTarget.NewTalk (lineToStart, lineToBreak, newTxt,callbackScriptAfterTalk,callbackFunctionAfterTalk);
-		}
+        RPGTalkFollowCharacter followCharacter = rpgtalkTarget.GetComponent<RPGTalkFollowCharacter>();
+        if (followCharacter)
+        {
+            followCharacter.containInsideScreen = containInsideScreen;
+        }
+
+        rpgtalkTarget.NewTalk (lineToStart, lineToBreak, newTxt, overwriteCallbackAfterTalk);
+		
 	}
 
 	/// <summary>

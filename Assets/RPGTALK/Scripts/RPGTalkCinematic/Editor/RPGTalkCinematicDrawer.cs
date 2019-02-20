@@ -18,22 +18,29 @@ public class RPGTalkCinematicDrawer : PropertyDrawer
 		SerializedProperty lineToBreakProp = property.FindPropertyRelative("lineToBreak");
 		SerializedProperty textSpeedProp = property.FindPropertyRelative("textSpeed");
 		SerializedProperty pauseUntilTalkEndProp = property.FindPropertyRelative("pauseUntilTalkEnd");
+        SerializedProperty autoPass = property.FindPropertyRelative("autoPass");
+        SerializedProperty secondsAutoPass = property.FindPropertyRelative("secondsAutoPass");
 
-		EditorGUILayout.LabelField("Put below the Text file to be parsed and become the talks!");
+        EditorGUILayout.LabelField("Put below the Text file to be parsed and become the talks!");
 		EditorGUILayout.PropertyField (txtToParseProp,GUIContent.none);
 		if (txtToParseProp.objectReferenceValue == null) {
 			EditorGUILayout.HelpBox("If no text is setted, it will be used the same that already is in the RPGTalk reference", MessageType.Info, true);
 		}
 
 		pauseUntilTalkEndProp.boolValue = GUILayout.Toggle(pauseUntilTalkEndProp.boolValue, "Pause Timeline while waiting for player's action?");
+        autoPass.boolValue = GUILayout.Toggle(autoPass.boolValue, "Automatically Pass the Talk?");
+        if (autoPass.boolValue)
+        {
+            EditorGUILayout.PropertyField(secondsAutoPass,true);
+        }
 
-		EditorGUILayout.LabelField("What line should the talk start? And in what should it end?");
+        EditorGUILayout.LabelField("What line should the talk start? And in what should it end?");
 		EditorGUILayout.BeginHorizontal ();
 		EditorGUILayout.PropertyField (lineToStartProp,GUIContent.none);
-		if (pauseUntilTalkEndProp.boolValue) {
+		if (pauseUntilTalkEndProp.boolValue || autoPass.boolValue) {
 			EditorGUILayout.PropertyField (lineToBreakProp, GUIContent.none);
 		} else {
-			EditorGUILayout.HelpBox("If you not wait for player input, each RPGTalk Cinematic Clip can only contain one line", MessageType.Info, true);
+			EditorGUILayout.HelpBox("If you not wait for player input or make the talk auto pass, each RPGTalk Cinematic Clip can only contain one line", MessageType.Info, true);
 		}
 		EditorGUILayout.EndHorizontal ();
 		EditorGUILayout.PropertyField (textSpeedProp);

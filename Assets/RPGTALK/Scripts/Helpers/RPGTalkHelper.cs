@@ -5,13 +5,31 @@ using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+#if RPGTalk_TMP
+using TMPro;
+#endif
 
 namespace RPGTALK.Helper
 {
 	[AddComponentMenu("Seize Studios/RPGTalk/Helper/RPGTalk Helper")]
 	public class RPGTalkHelper : MonoBehaviour {
 
-		public static void CopyTextParameters(Text original, Text copy){
+        public static void CopyTextParameters(Object original, Object copy)
+        {
+            if (original is Text)
+            {
+                CopyTextParameters(original as Text, copy as Text);
+                return;
+            }
+#if RPGTalk_TMP
+            if(original is TextMeshProUGUI)
+            {
+                CopyTextParameters(original as TextMeshProUGUI, copy as TextMeshProUGUI);
+            }
+#endif
+        }
+
+        public static void CopyTextParameters(Text original, Text copy){
 			//Replace every public option of the new text with the ancient one
 			copy.text = original.text;
 			copy.font = original.font;
@@ -28,8 +46,29 @@ namespace RPGTALK.Helper
 			copy.material = original.material;
 			copy.raycastTarget = original.raycastTarget;
 		}
-
-		public static int CountRichTextCharacters(string line){
+#if RPGTalk_TMP
+        public static void CopyTextParameters(TextMeshProUGUI original, TextMeshProUGUI copy)
+        {
+            //Replace every public option of the new text with the ancient one
+            copy.text = original.text;
+            copy.font = original.font;
+            copy.fontStyle = original.fontStyle;
+            copy.fontSize = original.fontSize;
+            copy.lineSpacing = original.lineSpacing;
+            copy.richText = original.richText;
+            copy.alignment = original.alignment;
+            copy.horizontalMapping = original.horizontalMapping;
+            copy.verticalMapping = original.verticalMapping;
+            copy.enableAutoSizing = original.enableAutoSizing;
+            copy.color = original.color;
+            copy.material = original.material;
+            copy.raycastTarget = original.raycastTarget;
+            copy.enableWordWrapping = original.enableWordWrapping;
+            copy.wordWrappingRatios = original.wordWrappingRatios;
+            copy.overflowMode = original.overflowMode;
+        }
+#endif
+        public static int CountRichTextCharacters(string line){
 			int richTextCount = 0;
 			//check for any rich text 
 			if (line.IndexOf('<') != -1) {
@@ -93,7 +132,7 @@ namespace RPGTALK.Helper
 
 		#if UNITY_EDITOR
 
-		[MenuItem("RPGTalk/Create RPGTalk/Base Instance %#r")]
+		[MenuItem("RPGTalk/Create RPGTalk/Base Instance")]
 		private static void CreateRPGTalkBase()
 		{
 			GameObject newGO = new GameObject ();
@@ -131,7 +170,7 @@ namespace RPGTALK.Helper
 			Undo.RegisterCreatedObjectUndo (newGO, "Create RPGTalk");
 		}
 
-		[MenuItem("RPGTalk/Create RPGTalk Area %#a")]
+		[MenuItem("RPGTalk/Create RPGTalk Area")]
 		private static void CreateRPGTalkArea()
 		{
 			
@@ -171,8 +210,9 @@ namespace RPGTALK.Helper
 		public string speakerName;
 		public string originalSpeakerName;
 		public string dialogText;
+        public string expression;
 
-		public override string ToString () {
+        public override string ToString () {
 			return  "(" + this.hasDialog + ")" + this.speakerName + "::" + this.dialogText + "\n";
 		}
 	}
@@ -183,13 +223,6 @@ namespace RPGTALK.Helper
 	public class RPGTalkVariable{
 		public string variableName;
 		public string variableValue;
-	}
-
-	//A class to be the photo of the person who is talking
-	[System.Serializable]
-	public class RPGTalkPhoto{
-		public string name;
-		public Sprite photo;
 	}
 
 	//A class to keep any rich text used
@@ -236,7 +269,7 @@ namespace RPGTALK.Helper
 	//A class to keep any question used inside the text
 	[System.Serializable]
 	public class RPGTalkQuestion{
-		public int questionNum = 0;
+		public string questionID;
 		public int lineWithQuestion = -1;
 		public bool alreadyHappen;
 		public List<string> choices = new List<string>();
@@ -244,18 +277,38 @@ namespace RPGTALK.Helper
 
 	//A class to keep the targets that the canvas can follow
 	[System.Serializable]
-	public class RPGTalkFollow{
-		[Tooltip("What is the name of the talker that this Transform represents? If leaved in blank, it will always follow this object, whatever the name of the talker is")]
-		public string name;
+	public class RPGTalkCharacterSettings{
+		[Tooltip("What is the Character that those settings represent?")]
+		public RPGTalkCharacter character;
 		[Tooltip("Who to follow?")]
 		public Transform follow;
 
 		[Tooltip("If he is following someone, should there be an offset?")]
 		public Vector3 followOffset;
+
+        [Tooltip("The animations should happen in a different Animator than the one set on RPGTalk?")]
+        public Animator animatorOverwrite;
 	}
 
+    public class RPGtalkSaveStatement
+    {
+        public string lineToStart;
+        public string lineToBreak;
+        public string savedData;
+        public int modifier;
+    }
 
-
+    //A class to keep any jitter used inside the text
+    [System.Serializable]
+    public class RPGTalkJitter
+    {
+        public float angle = 1;
+        public float jitter = 1;
+        public int lineWithJitter = -1;
+        public int jitterPosition = -1;
+        public bool alreadyGone;
+        public int numberOfCharacters = 1;
+    }
 
 
 }

@@ -14,7 +14,7 @@ public class SimpleChooseDemo : MonoBehaviour {
 		rpgtalk.OnMadeChoice += OnMadeChoice;
 	}
 	
-	void OnMadeChoice(int questionId, int choiceID){
+	void OnMadeChoice(string questionId, int choiceID){
 		if(choiceID == 1){
 			//Change the timeline
 			director.playableAsset = timelineToChange;

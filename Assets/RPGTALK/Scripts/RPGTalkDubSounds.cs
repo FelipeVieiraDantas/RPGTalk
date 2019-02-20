@@ -34,6 +34,7 @@ namespace RPGTALK.Dub
 			for (int i = 0; i < dubsByLanguage.Length; i++) {
 				if (dubsByLanguage [i].language == LanguageSettings.actualLanguage) {
 					languageToUse = i;
+                    break;
 				}
 			}
 
@@ -63,7 +64,7 @@ namespace RPGTALK.Dub
 	//A class to keep the dub
 	[System.Serializable]
 	public class RPGTalkDubLanguage{
-		public SupportedLanguages language;
+		public RPGTalkLanguage language;
 		public AudioClip[] dubClip;
 	}
 }

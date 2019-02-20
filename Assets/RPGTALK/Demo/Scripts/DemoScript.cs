@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Events;
 //We might change the language in this script, so let's use the localization
 using RPGTALK.Localization;
 
@@ -27,6 +28,11 @@ public class DemoScript : MonoBehaviour {
 	//A wall to desappear and a particle to play when that happens
 	public GameObject wall;
 	public GameObject particle;
+
+    //We want to specify callbacks to different parts of the conversation
+    public UnityEvent OnIKnowYou, OnByWall;
+
+    public RPGTalkLanguage languageEN, languagePT;
 
 	// Get the right references...
 	void Start () {
@@ -110,7 +116,7 @@ public class DemoScript : MonoBehaviour {
 	public void IKnowYouNow(){
 		askWho.SetActive (false);
 		rpgTalk.variables [0].variableValue = myName.text;
-		rpgTalk.NewTalk ("17", "25", rpgTalk.txtToParse, this, "ByeWall");
+		rpgTalk.NewTalk ("17", "25", rpgTalk.txtToParse, OnIKnowYou);
 	}
 
 	//Let's get rid of that wall. This function was called by RPGTalk bacause the function above
@@ -123,16 +129,16 @@ public class DemoScript : MonoBehaviour {
 
 	//After the wall exploded, let the Funny Guy end his talking
 	void FunnyGuyEnd(){
-		rpgTalk.NewTalk ("26", "29", rpgTalk.txtToParse, this, "GiveBackControls");
+		rpgTalk.NewTalk ("26", "29", rpgTalk.txtToParse, OnByWall);
 	}
 
 	//In the TagsDemo scene, when we make a choice let's find out what we chose
 	//and change the current language based on it
-	void OnMadeChoice(int questionId, int choiceID){
+	void OnMadeChoice(string questionId, int choiceID){
 		if (choiceID == 0) {
-			LanguageSettings.actualLanguage = SupportedLanguages.EN_US;
+			LanguageSettings.actualLanguage = languageEN;
 		} else {
-			LanguageSettings.actualLanguage = SupportedLanguages.PT_BR;
+			LanguageSettings.actualLanguage = languagePT;
 		}
 	}
 	

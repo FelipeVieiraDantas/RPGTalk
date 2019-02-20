@@ -8,7 +8,8 @@ using UnityEditorInternal;
 [CustomEditor(typeof(RPGTalkArea))]
 public class RPGTalkAreaEditor : Editor {
 
-	override public void OnInspectorGUI()
+
+    override public void OnInspectorGUI()
 	{
 		serializedObject.Update ();
 
@@ -42,8 +43,12 @@ public class RPGTalkAreaEditor : Editor {
 			EditorGUI.indentLevel++;
 			EditorGUILayout.LabelField ("Key that needs to be pressed to interect:");
 			area.interactionKey = (KeyCode)EditorGUILayout.EnumPopup (area.interactionKey);
+            EditorGUILayout.LabelField("The Talk can also be passed with some button set on Project Settings > Input:");
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("interactionButton"), true);
+            area.interactWithMouse = GUILayout.Toggle(area.interactWithMouse, "Also interact with Mouse Click?");
 
-			EditorGUILayout.PropertyField (serializedObject.FindProperty("showWhenInteractionIsPossible"),true);
+
+            EditorGUILayout.PropertyField (serializedObject.FindProperty("showWhenInteractionIsPossible"),true);
 			if(serializedObject.FindProperty("showWhenInteractionIsPossible").arraySize == 0){
 				EditorGUILayout.HelpBox("Not a single element to be shown when the intercation is possible?" +
 					"It would be nice to put a element here such as 'Press X to talk'", MessageType.Warning, true);
@@ -55,7 +60,11 @@ public class RPGTalkAreaEditor : Editor {
 		}
 
 		area.happenOnlyOnce = GUILayout.Toggle(area.happenOnlyOnce, "Can only be played once?");
-		if (serializedObject.FindProperty ("rpgtalkTarget").objectReferenceValue != null) {
+        if (area.happenOnlyOnce)
+        {
+            area.saveAlreadyHappened = GUILayout.Toggle(area.saveAlreadyHappened, "Save if this area has already played");
+        }
+        if (serializedObject.FindProperty ("rpgtalkTarget").objectReferenceValue != null) {
 			area.forbidPlayIfRpgtalkIsPlaying = GUILayout.Toggle (area.forbidPlayIfRpgtalkIsPlaying, "Cannot be played if the RPGTalk instance is already playing");
 		}
 
@@ -71,25 +80,13 @@ public class RPGTalkAreaEditor : Editor {
 		EditorGUILayout.LabelField("Callbacks",EditorStyles.boldLabel);
 
 		EditorGUILayout.LabelField("Any script should be called before the area beggins?");
-		EditorGUILayout.PropertyField (serializedObject.FindProperty("callbackScriptBeforeTalk"),GUIContent.none);
-		if(serializedObject.FindProperty("callbackScriptBeforeTalk").objectReferenceValue != null){
-			EditorGUILayout.LabelField("What function on that script should be called?");
-			EditorGUILayout.PropertyField (serializedObject.FindProperty("callbackFunctionBeforeTalk"),GUIContent.none);
-			if(serializedObject.FindProperty("callbackFunctionBeforeTalk").stringValue == ""){
-				EditorGUILayout.HelpBox("You said that a script should be called as callback, but didn't set the name of the functions to be called in that script", MessageType.Error, true);
-			}
-		}
+		EditorGUILayout.PropertyField (serializedObject.FindProperty("callbackBeforeTalk"),GUIContent.none);
+		
 
 		if (serializedObject.FindProperty ("rpgtalkTarget").objectReferenceValue != null) {
-			EditorGUILayout.LabelField ("Any script should be called when the Talk is done?");
-			EditorGUILayout.PropertyField (serializedObject.FindProperty ("callbackScriptAfterTalk"), GUIContent.none);
-			if (serializedObject.FindProperty ("callbackScriptAfterTalk").objectReferenceValue != null) {
-				EditorGUILayout.LabelField ("What function on that script should be called?");
-				EditorGUILayout.PropertyField (serializedObject.FindProperty ("callbackFunctionAfterTalk"), GUIContent.none);
-				if (serializedObject.FindProperty ("callbackFunctionAfterTalk").stringValue == "") {
-					EditorGUILayout.HelpBox ("You said that a script should be called as callback, but didn't set the name of the functions to be called in that script", MessageType.Error, true);
-				}
-			}
+			EditorGUILayout.LabelField ("Overwrite the scripts that should be called when the Talk is done?");
+			EditorGUILayout.PropertyField (serializedObject.FindProperty ("overwriteCallbackAfterTalk"), GUIContent.none);
+			
 		}
 			
 		EditorGUILayout.EndVertical ();
@@ -127,9 +124,22 @@ public class RPGTalkAreaEditor : Editor {
 
 			EditorGUILayout.Space ();
 			area.shouldStayOnScreen = GUILayout.Toggle (area.shouldStayOnScreen, "Should the canvas stay on screen after the talk ended?");
+            area.autoPass = GUILayout.Toggle(area.autoPass, "Automatically Pass the Talk?");
+            if (area.autoPass)
+            {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("secondsAutoPass"));
+            }
 
 
-			EditorGUILayout.EndVertical ();
+            area.containInsideScreen = GUILayout.Toggle(area.containInsideScreen, "Contain the Dialog Window inside the screen?");
+            if (area.containInsideScreen)
+            {
+                EditorGUILayout.HelpBox("To contain a Diolog window inside the screen, your RPGTalk Holder must have the RPGTalkFollowCharacter snippet.", MessageType.Info, true);
+            }
+
+
+
+            EditorGUILayout.EndVertical ();
 		}
 
 
