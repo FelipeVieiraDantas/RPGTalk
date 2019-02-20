@@ -1,0 +1,32 @@
+[title=cutscene1-begin]
+FunnyGuy: [dub=0]hum hum hummm... hum hum humm... hum hum huhum hum hummmm...
+*PlayerName*: [dub=1]Cof, Cof
+FunnyGuy: Oh, I'm sorry. I haven't seen you there. What can I help you?
+*PlayerName*: I'm here to learn about tags in RPGTalk!
+FunnyGuy: Well you have already used one! Using the <b>dub</b> tag, you can make a sound! Thanks to the [sprite=0] RPGTalkDubSounds Component.
+*PlayerName*: [dub=1]Cof, Cof... \n Wow! It is true! And I just breaked a line!
+FunnyGuy: Also, Rich text is fully supported now. You can make anything <b>bold</b>, <i>italic</i>, change text <size=30>Size</size> or even its <color=red>color</color>
+*PlayerName*: <b><i><color=blue>NICE</color></i></b>
+FunnyGuy: You can now change text speed during the text, so I can tell you something with quite an [speed=5]impact. [/speed] Looks important, right?
+*PlayerName*: Yes! [sprite=1] RPGTalk is getting really amazing! Wait... Did i just used [speed=5]sprites[/speed] inside the text?
+FunnyGuy: Sure! You can have an image occupying space inside the text using the <b>sprite</b> tag. Really cool.
+FunnyGuy: Useful to show tutorial like "press [sprite=2]" or "get [sprite=3] to continue".
+*PlayerName*: Really cool! And that balloon above our heads... It is changed by script?
+FunnyGuy: Not at all! RPGTalk uses our names to define who the canvas should follow!
+*PlayerName*: AWESOME! It would only be better if I could make choices or change the language...
+FunnyGuy: Well... Why don't you talk to the girl on the other room?
+*PlayerName*: You are joking?!?
+FunnyGuy: [dub=0]hum hum hummm... hum hum humm... hum hum huhum hum hummmm...
+[title=cutscene1-end]
+
+
+[title=cutscene2-begin]
+*PlayerName*: So... I heard you can tell more about Choices or Languages?
+Girl: Of course! You can now change language easily using  [sprite=0] RPGTalkLocalization.
+Girl: It doesn't even need to be something inside RPGTalk! You can use  [sprite=1] RPGTalkLocalizationString to change any UI Text.
+*PlayerName*: Looks amazing! How can I test it?
+Girl: [question=0]You wanted to know about choices? So choose your language:
+[choice]American English
+[choice]Brazilian Portuguese
+Girl: Bada-bin-bada-bum, when this talk ends, you have everything in your choosed language!
+[title=cutscene2-end]

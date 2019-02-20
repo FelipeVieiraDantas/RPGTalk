@@ -1,0 +1,12 @@
+Unity-chan...? What are you doing here?
+I'm here to learn more about Timeline in Unity and RPGTalk!
+Well, RPGTalk is now integrated with Timeline, so you can build your cutscenes easily!
+Really? Awesome!
+I guess that the sounds can be played used te Timeline itself or using the RPGTalkDubSounds, so we can have something like different sounds for different languages.
+That's right. These talks can be scripted but RPGTalk can also pause the timeline while waiting the player to finish the talk.
+Really? Let me test it!
+[dub=0]3... 2... 1...
+[dub=1]Start!
+It is true!
+Yes it is! Now is even easier to build your own cutscenes!
+I see! Thank you! Unity-chan is out!

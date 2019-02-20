@@ -1,0 +1,32 @@
+[title=cutscene1-begin]
+FunnyGuy: [dub=0]hum hum hummm... hum hum humm... hum hum huhum hum hummmm...
+*PlayerName*: [dub=1]Cof, Cof
+FunnyGuy: Oh, Me desculpe. Não vi você aí. No que posso te ajudar?
+*PlayerName*: Estou aqui para aprender sobre tags no RPGTalk!
+FunnyGuy: Bem, você já usou uma! Usando a tag <b>dub</b>, você consegue fazer um som! Graças ao componente [sprite=0] RPGTalkDubSounds.
+*PlayerName*: [dub=1]Cof, Cof... Wow! É verdade!
+FunnyGuy: Além disso, Rich text agora é totalmete suportado. Você pode fazer qualquer coisa <b>negrito</b>, <i>itálico</i>, mudar o <size=30>Tamanho</size> do texto ou até sua <color=red>cor</color>
+*PlayerName*: <b><i><color=blue>LEGAL</color></i></b>
+FunnyGuy: Você também pode mudar a velocidade durante o texto, assim eu posso te falar algo com algum [speed=5]impacto. [/speed] Parece importante, não é?
+*PlayerName*: Sim! [sprite=1] RPGTalk está ficando realmente incrível! Espera... Eu acabei de usar [speed=5]sprites[/speed] dentro de um texto?
+FunnyGuy: Com certeza! Você pode ter uma imagem ocupando espaço dentro do texto usando a tag <b>sprite</b>. Bem legal.
+FunnyGuy: Útil para mostrar tutoriais como "pressione [sprite=2]" ou "pegue [sprite=3] para continuar".
+*PlayerName*: Realmente ótimo! E esse balão nas nossas cabeças... É trocado por script?
+FunnyGuy: Não mesmo! RPGTalk usa os nossos nomes para definir quem esse canvas deve seguir.
+*PlayerName*: Incrível! Só seria melhor se eu pudesse fazer escolhas ou mudar a língua...
+FunnyGuy: Bem... Por que você não fala com a garota na outra sala?
+*PlayerName*: Tá falando sério!?
+FunnyGuy: [dub=0]hum hum hummm... hum hum humm... hum hum huhum hum hummmm...
+[title=cutscene1-end]
+
+
+[title=cutscene2-begin]
+*PlayerName*: Então... Ouvi falar que você pode me dizer mais sobre Escolhas e Línguas?
+Girl: Claro! Você pode mudar de língua fácil usando  [sprite=0] RPGTalkLocalization.
+Girl: Não precisa nem ser algo dentro do RPGTalk! você pode usar  [sprite=1] RPGTalkLocalizationString para mudar qualquer texto de UI.
+*PlayerName*: Parece ótimo! Como eu testo isso?
+Girl: [question=0]Você queria saber sobre escolhas? Escolha sua língua:
+[choice]Inglês Americano
+[choice]Português Brasileiro
+Girl: Bada-bin-bada-bum, quando essa conversa acabar, você vai ter tudo na sua língua escolhida!
+[title=cutscene2-end]

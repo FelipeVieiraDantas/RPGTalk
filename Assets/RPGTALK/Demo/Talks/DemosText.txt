@@ -1,0 +1,40 @@
+So you like the Quick Start, hum?
+This is it! Just a TXT with all the text, and let us do the rest!
+Although, we have a lot of useful options... Be sure to check the Complex Demo!
+You can aways visit www.seizestudios.com and see the documentation also!
+Follow us on Social Media to see more awesome stuff!
+
+
+
+-------- Complex Demo ---------
+*PlayerName*: So... This is RPGTalk, hum? Seems nice. 
+*PlayerName*: I'm already noticing that my face can move while I'm talking... I belive that any Animator can be set, so that open a lot of possibilites...
+*PlayerName*: I Guess I will see what it can do, moving with the arrows.
+*PlayerName*: Oh! There is someone right there! I'll hit "E" next to him to talk.
+
+FunnyGuy: Hey! Did you notice that every option can change in realtime?
+FunnyGuy: By the way... Who are you again?
+*PlayerName*: I'm *PlayerName*. Wait... Does that mean i can use variables?!
+FunnyGuy: Yes you can, *PlayerName*! Easy peasy!
+*PlayerName*: Neat! What else can I do?
+FunnyGuy: Hum... You can have really long texts, and the RPGTalk itself will break it. Something called Word Warp. You can even have insanaly high amount of words! It's pretty cool!
+*PlayerName*: I see! And the text is taken from an external file, isn't that right?
+FunnyGuy: Yes it is! It is awesome to work on dialogs later on, or change just one file for different languages. No extra code needed!
+FunnyGuy: But, for me, the best part is that we can have Callbacks!
+*PlayerName*: Callbacks? Like, when the talk end we call a function in other script?
+FunnyGuy: Exactly! Watch me get rid of that wall...
+FunnyGuy: ****Magic****
+*PlayerName*: Wow! With Callbacks, I can do whatever I want!
+FunnyGuy: You can Indeed! Now go talk to my friend on the other room!
+*PlayerName*: Ok! Thank you!
+
+I wonder if that dialog could follow someone... Hum...
+
+*PlayerName*: Hi! I'm *PlayerName*!
+Girl: Hi *PlayerName*. I notice that you saw that dialogs can follow objects too. Bacause we use the Unity's Canvas, it can work nice on 3D projects as well.
+Girl: It is no problem to have multiple instances of RPGTalk on the same scene either.
+Girl: The sounds, names, photos, everything is highly customizable.
+*PlayerName*: The code is really simple, too!
+Girl: Yes! But listen to me, I'm going to say something so important that the the Talk will be fixed on the screen, even when you can move again.
+*PlayerName*: *Listen Carefuly*
+Girl: Show your support by following Seize Studios on Social Media. Any doubts, check the documentation at www.seizestudios.com
