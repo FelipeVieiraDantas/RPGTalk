@@ -200,6 +200,7 @@ namespace RPGTALK.Helper
             if(assetPath.Length == 0 || assetPath.Length > 1)
             {
                 configAsset = null;
+                Debug.LogWarning("Couldn't fint the RPGTalk Configuration file in your project D= This will cause bad erros!");
                 return;
             }
             configAsset = AssetDatabase.LoadAssetAtPath<RPGTalkConfig>(AssetDatabase.GUIDToAssetPath(assetPath[0]));

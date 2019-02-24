@@ -3,31 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class RPGTalkCanPassWarning : MonoBehaviour
+namespace RPGTALK.Snippets
 {
-
-    public UnityEvent OnCanPass, OnPassed;
-
-    RPGTalk rpgtalk;
-
-    // Start is called before the first frame update
-    void Start()
+    [AddComponentMenu("Seize Studios/RPGTalk/Snippets/Can Pass Warning")]
+    public class RPGTalkCanPassWarning : MonoBehaviour
     {
-        rpgtalk = GetComponent<RPGTalk>();
-        rpgtalk.OnEndAnimating += CanPass;
-        rpgtalk.OnPlayNext += Passed;
-    }
 
-    void CanPass()
-    {
-        if (rpgtalk.enablePass)
+        public UnityEvent OnCanPass, OnPassed;
+
+        RPGTalk rpgtalk;
+
+        // Start is called before the first frame update
+        void Start()
         {
-            OnCanPass.Invoke();
+            rpgtalk = GetComponent<RPGTalk>();
+            rpgtalk.OnEndAnimating += CanPass;
+            rpgtalk.OnPlayNext += Passed;
+            rpgtalk.OnEndTalk += Passed;
         }
-    }
 
-    void Passed()
-    {
-        OnPassed.Invoke();
+        void CanPass()
+        {
+            if (rpgtalk.enablePass)
+            {
+                OnCanPass.Invoke();
+            }
+        }
+
+        void Passed()
+        {
+            OnPassed.Invoke();
+        }
     }
 }

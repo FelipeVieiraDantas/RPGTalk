@@ -20,21 +20,23 @@ FunnyGuy: [dub=0]hum hum hummm... hum hum humm... hum hum huhum hum hummmm...
 [title=cutscene1-end]
 
 [title=cutscene2-begin]
-*PlayerName*: [expression=cry]So... I heard you can tell more about Choices or Languages?
+*PlayerName*: So... I heard you can tell more about Choices or Languages?
 Girl: Of course! You can now change language easily using  [sprite=0] RPGTalkLocalization.
-Girl: [expression=cry]It doesn't even need to be something inside RPGTalk! You can use  [sprite=1] RPGTalkLocalizationString to change any UI Text.
-*PlayerName*: Looks amazing! How can I test it?
+Girl: It doesn't even need to be something inside RPGTalk! You can use  [sprite=1] RPGTalkLocalizationString to change any UI Text.
+*PlayerName*: [expression=surprised] Looks amazing! How can I test it? Wait, my photo is action accordingly to my expression?
 Girl: [question=0]You wanted to know about choices? So choose your language:
-[choice]American English
-[choice]Brazilian Portuguese
-Girl: Bada-bin-bada-bum, when this talk ends, you have everything in your choosed language!
-[save start=savedPorra break=savedPorraEnd data=0 mod=0]
+[choice]American English [newtalk start=choseEnglish_begin break=choseEnglish_end]
+[choice]Brazilian Portuguese [newtalk start=chosePortuguese_begin break=chosePortuguese_end]
 [title=cutscene2-end]
 
 [title=languageUI]
 Current Language: American English
 
 
-[title=savedPorra]
-Você escolheu ingleeeeeeees
-[title=savedPorraEnd]
+[title=chosePortuguese_begin]
+Girl: Portuguese? Ok! I can work with that. Bada-bin-bada-bum, when this talk ends, you have everything in the right language!
+[title=chosePortuguese_end]
+
+[title=choseEnglish_begin]
+Girl: English? But you are already in english!
+[title=choseEnglish_end]

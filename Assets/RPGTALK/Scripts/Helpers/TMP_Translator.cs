@@ -7,6 +7,9 @@ using RPGTALK.Helper;
 using TMPro;
 #endif
 
+//We may see a lot of "Uncreachable code" warnings if have or don't TMP. Let's desable them for now
+#pragma warning disable 0162
+
 namespace RPGTALK.Texts
 {
     // This class has the objective of translate any variables that have different names between Unity's regular UI and TMPUGUI.
@@ -466,3 +469,5 @@ namespace RPGTALK.Texts
 
     }
 }
+
+#pragma warning restore 0162

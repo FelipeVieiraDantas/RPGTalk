@@ -24,12 +24,19 @@ FunnyGuy: [dub=0]hum hum hummm... hum hum humm... hum hum huhum hum hummmm...
 *PlayerName*: Então... Ouvi falar que você pode me dizer mais sobre Escolhas e Línguas?
 Girl: Claro! Você pode mudar de língua fácil usando  [sprite=0] RPGTalkLocalization.
 Girl: Não precisa nem ser algo dentro do RPGTalk! você pode usar  [sprite=1] RPGTalkLocalizationString para mudar qualquer texto de UI.
-*PlayerName*: Parece ótimo! Como eu testo isso?
+*PlayerName*: [expression=surprised] Parece ótimo! Como eu testo isso? Espera, eu estou com a foto reagindo a minha expressão?
 Girl: [question=0]Você queria saber sobre escolhas? Escolha sua língua:
-[choice]Inglês Americano
-[choice]Português Brasileiro
-Girl: Bada-bin-bada-bum, quando essa conversa acabar, você vai ter tudo na sua língua escolhida!
+[choice]Inglês Americano [newtalk start=choseEnglish_begin break=choseEnglish_end]
+[choice]Português Brasileiro [newtalk start=chosePortuguese_begin break=chosePortuguese_end]
 [title=cutscene2-end]
 
 [title=languageUI]
 Língua Atual: Português Brasileiro
+
+[title=chosePortuguese_begin]
+Girl: Português? Você já está em português!
+[title=chosePortuguese_end]
+
+[title=choseEnglish_begin]
+Girl: Inglês? Ok! Bada-bin-bada-bum, quando a conversa acabar, tudo vai estar assim!
+[title=choseEnglish_end]

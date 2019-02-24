@@ -8,6 +8,7 @@ using RPGTALK.Texts;
 using RPGTALK.Helper;
 using RPGTALK.Localization;
 using RPGTALK.Dub;
+using RPGTALK.Snippets;
 
 
 
@@ -1170,7 +1171,7 @@ public class RPGTalk : MonoBehaviour {
 
     Expression IsExpressing(RpgtalkElement element)
     {
-        if(element.expression != "")
+        if(!string.IsNullOrEmpty(element.expression))
         {
             foreach(RPGTalkCharacterSettings character in characters)
             {
@@ -1524,6 +1525,11 @@ public class RPGTalk : MonoBehaviour {
                         callback.Invoke();
                     }
                     lookForClick = false;
+
+                    //Let's call the endtalk methods
+                    if (OnEndTalk != null)
+                        OnEndTalk.Invoke();
+
                 }
 
                 return;
@@ -1665,6 +1671,15 @@ public class RPGTalk : MonoBehaviour {
         PlayNext();
     }
 
+    //When we make a choice, we don't want it to skip the next line, so we will wait to the end of the frame
+    //so that the events will be resetted by then
+    IEnumerator ReenableSkip(bool originalSkip)
+    {
+        enableQuickSkip = false;
+        yield return new WaitForEndOfFrame();
+        enableQuickSkip = originalSkip;
+    }
+
     /// <summary>
     /// Function to be called by the buttons when the user makes a choice.
     /// This passes the talk and call the OnMadeChoice event
@@ -1679,7 +1694,7 @@ public class RPGTalk : MonoBehaviour {
         }
         enablePass = true;
 
-
+        StartCoroutine(ReenableSkip(enableQuickSkip));
 
         PlayNext ();
         if (OnMadeChoice != null) {
@@ -1770,14 +1785,23 @@ public class RPGTalk : MonoBehaviour {
 
 
         textToDisplay = textToDisplay.Replace("\\n","\n");
+
+
+        //if have an audio... playit
+        if (textAudio != null && !rpgAudioSorce.isPlaying)
+        {
+            if (textToDisplay.Length > textUI.GetCurrentText().Length)
+            {
+                rpgAudioSorce.clip = textAudio;
+                rpgAudioSorce.Play();
+            }
+        }
+
+
         //Put the text in the UI
         textUI.ChangeTextTo(textToDisplay);
 
-        //if have an audio... playit
-        if (textAudio != null && !rpgAudioSorce.isPlaying) {
-            rpgAudioSorce.clip = textAudio;
-            rpgAudioSorce.Play ();
-        }
+
 
         //Keep the amount of rich text in the string so we can count them later on
         int RichTextUntilNow = RPGTalkHelper.CountRichTextCharacters(textToDisplay);
@@ -1901,7 +1925,7 @@ public class RPGTalk : MonoBehaviour {
         //Let's set to false any expression left
         if(actualAnimator != null)
         {
-            if (expressing != null)
+            if (expressing != null && !string.IsNullOrEmpty(expressing.boolInAnimator))
             {
                 actualAnimator.SetBool(expressing.boolInAnimator, false);
             }

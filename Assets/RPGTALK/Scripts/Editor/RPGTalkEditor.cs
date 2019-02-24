@@ -25,9 +25,32 @@ public class RPGTalkEditor : Editor
 		EditorGUILayout.PropertyField (serializedObject.FindProperty("txtToParse"),GUIContent.none);
 		if (serializedObject.FindProperty ("txtToParse").objectReferenceValue == null) {
 			EditorGUILayout.HelpBox ("RPGTalk needs a TXT file to retrieve the lines from", MessageType.Error, true);
-		} 
+		}
 
-		EditorGUILayout.PropertyField (serializedObject.FindProperty("showWithDialog"),true);
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("What line of the text should the Talk start? And in what line shoult it end?");
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("lineToStart"), GUIContent.none);
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("lineToBreak"), GUIContent.none);
+        EditorGUILayout.EndHorizontal();
+        string lineToStart = serializedObject.FindProperty("lineToStart").stringValue;
+        int actualLinaToStart = -2;
+        if (int.TryParse(lineToStart, out actualLinaToStart) && actualLinaToStart < 1)
+        {
+            EditorGUILayout.HelpBox("The line that the Text should start must be 1 or greater!", MessageType.Error, true);
+        }
+        string lineToBreak = serializedObject.FindProperty("lineToBreak").stringValue;
+        int actualLinaToBreak = -2;
+        if (int.TryParse(lineToBreak, out actualLinaToBreak) && actualLinaToBreak != -1 &&
+            actualLinaToBreak < actualLinaToStart)
+        {
+            EditorGUILayout.HelpBox("The line of the Text to stop the Talk comes before the line of the Text to start the Talk? " +
+                "That makes no sense! If you want to read the Text file until the end, leave the line to break as '-1'", MessageType.Error, true);
+        }
+        EditorGUILayout.HelpBox("The line to start or to end might be set as strings! For instance, you can set lineToStart as 'MyString' and in your text, RPGTalk will start reading the line just after the tag [title=MyString].", MessageType.Info, true);
+
+
+        EditorGUILayout.PropertyField (serializedObject.FindProperty("showWithDialog"),true);
 		if(serializedObject.FindProperty("showWithDialog").arraySize == 0){
 			EditorGUILayout.HelpBox("Not a single element to be shown with the Talk? Not even the Canvas?" +
 				"Are you sure that is the correct bahaviour?", MessageType.Warning, true);
@@ -55,7 +78,7 @@ public class RPGTalkEditor : Editor
         {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("secondsAutoPass"));
         }
-        if (!rpgTalk.passWithMouse && serializedObject.FindProperty("passWithInputButton").stringValue == ""){
+        if (!rpgTalk.passWithMouse && serializedObject.FindProperty("passWithInputButton").stringValue == "" && !rpgTalk.autoPass){
 			EditorGUILayout.HelpBox("There is no condition to pass the Talk. Is it really the expected behaviour?", MessageType.Warning, true);
 		}
 
@@ -74,92 +97,95 @@ public class RPGTalkEditor : Editor
 		EditorGUILayout.EndVertical ();
 
 
-        //create a nice box with round edges.
-        EditorGUILayout.BeginVertical((GUIStyle)"HelpBox");
-
-        EditorGUILayout.LabelField("Characters Settings:", EditorStyles.boldLabel);
-
-        rpgTalk.shouldFollow = GUILayout.Toggle(rpgTalk.shouldFollow, "Should the canvas follow someone?");
-        if (rpgTalk.shouldFollow)
+        if (rpgTalk.dialoger)
         {
-            EditorGUI.indentLevel++;
-            EditorGUILayout.LabelField("The object that follows should be Billboard? Based on which camera?");
-            EditorGUILayout.BeginHorizontal();
-            rpgTalk.billboard = GUILayout.Toggle(rpgTalk.billboard, "Billboard?");
-            if (rpgTalk.billboard)
-            {
-                rpgTalk.mainCamera = GUILayout.Toggle(rpgTalk.mainCamera, "Based on Main Camera?");
-            }
-            EditorGUILayout.EndHorizontal();
-            if (rpgTalk.billboard && !rpgTalk.mainCamera)
-            {
-                EditorGUILayout.LabelField("What camera should the Billboard be based on?");
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("otherCamera"), GUIContent.none);
-            }
-            EditorGUI.indentLevel--;
-        }
+            //create a nice box with round edges.
+            EditorGUILayout.BeginVertical((GUIStyle)"HelpBox");
 
+            EditorGUILayout.LabelField("Characters Settings:", EditorStyles.boldLabel);
 
-        EditorGUILayout.LabelField("Who are the characters that may appear on that conversation?");
-        EditorGUI.indentLevel++;
-        if (!hideCharacters)
-        {
-            if (rpgTalk.characters != null)
+            rpgTalk.shouldFollow = GUILayout.Toggle(rpgTalk.shouldFollow, "Should the canvas follow someone?");
+            if (rpgTalk.shouldFollow && !rpgTalk.GetComponent<RPGTALK.Snippets.RPGTalkFollowCharacter>())
             {
-                for (int i = 0; i < rpgTalk.characters.Length; i++)
+                EditorGUILayout.HelpBox("There should be a RPGtalkFollowCharacter Snippet on this object to make the follow work the way it should", MessageType.Error, true);
+                /*EditorGUI.indentLevel++;
+                EditorGUILayout.LabelField("The object that follows should be Billboard? Based on which camera?");
+                EditorGUILayout.BeginHorizontal();
+                rpgTalk.billboard = GUILayout.Toggle(rpgTalk.billboard, "Billboard?");
+                if (rpgTalk.billboard)
                 {
-                    EditorGUILayout.LabelField("Who is this character?");
-                    EditorGUILayout.BeginHorizontal();
-                    rpgTalk.characters[i].character = (RPGTalkCharacter)EditorGUILayout.ObjectField(rpgTalk.characters[i].character, typeof(RPGTalkCharacter), false);
-                    if (GUILayout.Button(" - "))
+                    rpgTalk.mainCamera = GUILayout.Toggle(rpgTalk.mainCamera, "Based on Main Camera?");
+                }
+                EditorGUILayout.EndHorizontal();
+                if (rpgTalk.billboard && !rpgTalk.mainCamera)
+                {
+                    EditorGUILayout.LabelField("What camera should the Billboard be based on?");
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("otherCamera"), GUIContent.none);
+                }
+                EditorGUI.indentLevel--;*/
+            }
+
+
+            EditorGUILayout.LabelField("Who are the characters that may appear on that conversation?");
+            EditorGUI.indentLevel++;
+            if (!hideCharacters)
+            {
+                if (rpgTalk.characters != null)
+                {
+                    for (int i = 0; i < rpgTalk.characters.Length; i++)
                     {
-                        serializedObject.FindProperty("characters").DeleteArrayElementAtIndex(i);
-                    }
-                    EditorGUILayout.EndHorizontal();
-                    EditorGUI.indentLevel += 2;
-                    EditorGUILayout.LabelField("Should an different Animator be set for it?");
-                    rpgTalk.characters[i].animatorOverwrite = (Animator)EditorGUILayout.ObjectField(rpgTalk.characters[i].animatorOverwrite, typeof(Animator), true);
-                    if (rpgTalk.shouldFollow)
-                    {
-                        EditorGUILayout.LabelField("What Transform should the canvas follow? Should there be an offset?");
+                        EditorGUILayout.LabelField("Who is this character?");
                         EditorGUILayout.BeginHorizontal();
-                        rpgTalk.characters[i].follow = (Transform)EditorGUILayout.ObjectField(rpgTalk.characters[i].follow, typeof(Transform), true);
-                        rpgTalk.characters[i].followOffset = EditorGUILayout.Vector3Field(GUIContent.none, rpgTalk.characters[i].followOffset);
+                        rpgTalk.characters[i].character = (RPGTalkCharacter)EditorGUILayout.ObjectField(rpgTalk.characters[i].character, typeof(RPGTalkCharacter), false);
+                        if (GUILayout.Button(" - "))
+                        {
+                            serializedObject.FindProperty("characters").DeleteArrayElementAtIndex(i);
+                        }
                         EditorGUILayout.EndHorizontal();
+                        EditorGUI.indentLevel += 2;
+                        EditorGUILayout.LabelField("Should an different Animator be set for it?");
+                        rpgTalk.characters[i].animatorOverwrite = (Animator)EditorGUILayout.ObjectField(rpgTalk.characters[i].animatorOverwrite, typeof(Animator), true);
+                        if (rpgTalk.shouldFollow)
+                        {
+                            EditorGUILayout.LabelField("What Transform should the canvas follow? Should there be an offset?");
+                            EditorGUILayout.BeginHorizontal();
+                            rpgTalk.characters[i].follow = (Transform)EditorGUILayout.ObjectField(rpgTalk.characters[i].follow, typeof(Transform), true);
+                            rpgTalk.characters[i].followOffset = EditorGUILayout.Vector3Field(GUIContent.none, rpgTalk.characters[i].followOffset);
+                            EditorGUILayout.EndHorizontal();
+                        }
+                        EditorGUI.indentLevel -= 2;
+                        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
                     }
-                    EditorGUI.indentLevel -= 2;
-                    EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
                 }
             }
-        }
-        EditorGUILayout.BeginHorizontal();
-        if (!hideCharacters)
-        {
-            if (GUILayout.Button(" + "))
+            EditorGUILayout.BeginHorizontal();
+            if (!hideCharacters)
             {
-                serializedObject.FindProperty("characters").InsertArrayElementAtIndex(serializedObject.FindProperty("characters").arraySize);
+                if (GUILayout.Button(" + "))
+                {
+                    serializedObject.FindProperty("characters").InsertArrayElementAtIndex(serializedObject.FindProperty("characters").arraySize);
+                }
             }
+            if (GUILayout.Button(hideCharacters ? "Show " + rpgTalk.characters.Length + " characters" : "Hide Characters"))
+            {
+                hideCharacters = !hideCharacters;
+            }
+            EditorGUILayout.EndHorizontal();
+
+            if (rpgTalk.shouldFollow && rpgTalk.characters.Length == 0)
+            {
+                EditorGUILayout.HelpBox("You need to set a Character and its Transform so that the Canvas can follow someone", MessageType.Error, true);
+            }
+
+
+            EditorGUI.indentLevel--;
+
+
+
+            EditorGUILayout.EndVertical();
+
+
         }
-        if (GUILayout.Button(hideCharacters ? "Show "+rpgTalk.characters.Length+" characters": "Hide Characters"))
-        {
-            hideCharacters = !hideCharacters;
-        }
-        EditorGUILayout.EndHorizontal();
-
-        if (rpgTalk.shouldFollow && rpgTalk.characters.Length == 0)
-        {
-            EditorGUILayout.HelpBox("You need to set a Character and its Transform so that the Canvas can follow someone", MessageType.Error, true);
-        }
-
-
-        EditorGUI.indentLevel--;
-
-
-
-        EditorGUILayout.EndVertical();
-
-
-
 
 
         //create a nice box with round edges.
@@ -198,30 +224,11 @@ public class RPGTalkEditor : Editor
 
 
 		EditorGUILayout.BeginVertical( (GUIStyle) "HelpBox"); 
-		EditorGUILayout.LabelField("Callback, Breaks & Variables:",EditorStyles.boldLabel);
+		EditorGUILayout.LabelField("Callback & Variables:",EditorStyles.boldLabel);
 		EditorGUILayout.LabelField("Any script should be called when the Talk is done?");
 		EditorGUILayout.PropertyField (serializedObject.FindProperty("callback"),GUIContent.none);
 
-		EditorGUILayout.Space ();
-		EditorGUILayout.LabelField("What line of the text should the Talk start? And in what line shoult it end?");
-		EditorGUILayout.BeginHorizontal ();
-		EditorGUILayout.PropertyField (serializedObject.FindProperty("lineToStart"),GUIContent.none);
-		EditorGUILayout.PropertyField (serializedObject.FindProperty("lineToBreak"),GUIContent.none);
-		EditorGUILayout.EndHorizontal ();
-		string lineToStart = serializedObject.FindProperty ("lineToStart").stringValue;
-		int actualLinaToStart = -2;
-		if( int.TryParse(lineToStart, out actualLinaToStart) && actualLinaToStart < 1){
-			EditorGUILayout.HelpBox("The line that the Text should start must be 1 or greater!", MessageType.Error, true);
-		}
-		string lineToBreak = serializedObject.FindProperty ("lineToBreak").stringValue;
-		int actualLinaToBreak = -2;
-		if(int.TryParse(lineToBreak, out actualLinaToBreak) && actualLinaToBreak != -1 &&
-			actualLinaToBreak < actualLinaToStart){
-			EditorGUILayout.HelpBox("The line of the Text to stop the Talk comes before the line of the Text to start the Talk? " +
-				"That makes no sense! If you want to read the Text file until the end, leave the line to break as '-1'", MessageType.Error, true);
-		}
-		EditorGUILayout.HelpBox("The line to start or to end might be set as strings! For instance, you can set lineToStart as 'MyString' and in your text, RPGTalk will start reading the line just after the tag [title=MyString].", MessageType.Info, true);
-
+		
 		EditorGUILayout.Space ();
 		EditorGUILayout.LabelField("Variables can be set to change some word in the text");
 		EditorGUI.indentLevel++;

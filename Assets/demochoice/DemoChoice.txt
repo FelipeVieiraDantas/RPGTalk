@@ -1,4 +1,0 @@
-[question=0]What do you want to do?
-[choice]Keep playing this timeline
-[choice]Play another timeline
-Nice! This timeline kept playing!

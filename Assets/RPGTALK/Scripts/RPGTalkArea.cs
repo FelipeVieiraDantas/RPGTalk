@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
+using RPGTALK.Snippets;
 
 [AddComponentMenu("Seize Studios/RPGTalk/RPGTalk Area")]
 public class RPGTalkArea : MonoBehaviour {

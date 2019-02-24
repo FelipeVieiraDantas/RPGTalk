@@ -79,7 +79,7 @@ public class RPGTalkAreaEditor : Editor {
 		EditorGUILayout.BeginVertical( (GUIStyle) "HelpBox"); 
 		EditorGUILayout.LabelField("Callbacks",EditorStyles.boldLabel);
 
-		EditorGUILayout.LabelField("Any script should be called before the area beggins?");
+		EditorGUILayout.LabelField("Any script should be called before the area begins?");
 		EditorGUILayout.PropertyField (serializedObject.FindProperty("callbackBeforeTalk"),GUIContent.none);
 		
 

@@ -4,96 +4,100 @@ using UnityEngine;
 using UnityEngine.Events;
 using RPGTALK.Timeline;
 
-public class RPGTalkSkipCutscene : MonoBehaviour
+namespace RPGTALK.Snippets
 {
-    public KeyCode keyToSkip = KeyCode.None;
-    public string buttonToSkip = "";
-    public bool skipWithMouse;
-    public bool needToSkipTwice;
-    public float timeBetweenSkips;
-    public UnityEvent OnFirstTwiceSkip;
-    public UnityEvent OnCancelTwiceSkip;
-    public UnityEvent OnSkip;
-    public bool canSkip = true;
-    public bool jumpQuestions;
-    public float delaySkip;
-
-    RPGTalk rpgtalk;
-    bool isTalking;
-    float timingSkip;
-    bool delaying;
-    RPGTalkTimeline timeline;
-
-    private void Start()
+    [AddComponentMenu("Seize Studios/RPGTalk/Snippets/Skip Cutscene")]
+    public class RPGTalkSkipCutscene : MonoBehaviour
     {
-        rpgtalk = GetComponent<RPGTalk>();
-        timeline = GetComponent<RPGTalkTimeline>();
-        rpgtalk.OnNewTalk += OnTalkStart;
-        rpgtalk.OnEndTalk += OnTalkFinish;
-    }
+        public KeyCode keyToSkip = KeyCode.None;
+        public string buttonToSkip = "";
+        public bool skipWithMouse;
+        public bool needToSkipTwice;
+        public float timeBetweenSkips;
+        public UnityEvent OnFirstTwiceSkip;
+        public UnityEvent OnCancelTwiceSkip;
+        public UnityEvent OnSkip;
+        public bool canSkip = true;
+        public bool jumpQuestions;
+        public float delaySkip;
 
-    private void Update()
-    {
-        if (isTalking && canSkip && !delaying)
+        RPGTalk rpgtalk;
+        bool isTalking;
+        float timingSkip;
+        bool delaying;
+        RPGTalkTimeline timeline;
+
+        private void Start()
         {
-            if ((keyToSkip != KeyCode.None && Input.GetKeyDown(keyToSkip)) ||
-            (buttonToSkip != "" && Input.GetButtonDown(buttonToSkip)) ||
-                (skipWithMouse && Input.GetMouseButtonDown(0)))
+            rpgtalk = GetComponent<RPGTalk>();
+            timeline = GetComponent<RPGTalkTimeline>();
+            rpgtalk.OnNewTalk += OnTalkStart;
+            rpgtalk.OnEndTalk += OnTalkFinish;
+        }
+
+        private void Update()
+        {
+            if (isTalking && canSkip && !delaying)
             {
-                Skip();
+                if ((keyToSkip != KeyCode.None && Input.GetKeyDown(keyToSkip)) ||
+                (buttonToSkip != "" && Input.GetButtonDown(buttonToSkip)) ||
+                    (skipWithMouse && Input.GetMouseButtonDown(0)))
+                {
+                    Skip();
+                }
+
+                timingSkip -= Time.deltaTime;
+                if (timingSkip <= 0)
+                {
+                    OnCancelTwiceSkip.Invoke();
+                }
+            }
+        }
+
+        public void Skip()
+        {
+            if (needToSkipTwice && timingSkip <= 0)
+            {
+                timingSkip = timeBetweenSkips;
+                OnFirstTwiceSkip.Invoke();
+                return;
             }
 
-            timingSkip -= Time.deltaTime;
-            if(timingSkip <= 0)
+            OnSkip.Invoke();
+            delaying = true;
+            Invoke("ActuallySkip", delaySkip);
+        }
+
+        void ActuallySkip()
+        {
+            delaying = false;
+
+            if (timeline != null)
             {
+                timeline.Skip(jumpQuestions);
+            }
+            else
+            {
+                rpgtalk.EndTalk(jumpQuestions);
+            }
+
+        }
+
+        void OnTalkStart()
+        {
+
+            isTalking = true;
+        }
+
+        void OnTalkFinish()
+        {
+            isTalking = false;
+            if (timingSkip > 0)
+            {
+                timingSkip = 0;
                 OnCancelTwiceSkip.Invoke();
             }
         }
-    }
-
-    public void Skip()
-    {
-        if(needToSkipTwice && timingSkip <= 0)
-        {
-            timingSkip = timeBetweenSkips;
-            OnFirstTwiceSkip.Invoke();
-            return;
-        }
-
-        OnSkip.Invoke();
-        delaying = true;
-        Invoke("ActuallySkip", delaySkip);
-    }
-
-    void ActuallySkip()
-    {
-        delaying = false;
-
-        if(timeline != null)
-        {
-            timeline.Skip(jumpQuestions);
-        }
-        else
-        {
-            rpgtalk.EndTalk(jumpQuestions);
-        }
 
     }
-
-    void OnTalkStart()
-    {
-
-        isTalking = true;
-    }
-
-    void OnTalkFinish()
-    {
-        isTalking = false;
-        if(timingSkip> 0)
-        {
-            timingSkip = 0;
-            OnCancelTwiceSkip.Invoke();
-        }
-    }
-
 }

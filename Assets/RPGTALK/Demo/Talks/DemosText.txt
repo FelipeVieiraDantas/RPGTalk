@@ -28,7 +28,7 @@ FunnyGuy: ****Magic****
 FunnyGuy: You can Indeed! Now go talk to my friend on the other room!
 *PlayerName*: Ok! Thank you!
 
-I wonder if that dialog could follow someone... Hum...
+*PlayerName*:I wonder if a dialog could follow someone or pass itself... Hum...
 
 *PlayerName*: Hi! I'm *PlayerName*!
 Girl: Hi *PlayerName*. I notice that you saw that dialogs can follow objects too. Bacause we use the Unity's Canvas, it can work nice on 3D projects as well.

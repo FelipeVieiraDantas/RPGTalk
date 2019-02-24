@@ -34,7 +34,7 @@ public class RPGTalkCinematicBehaviour : PlayableBehaviour
     public float secondsAutoPass;
     double[] startTime;
 
-    Playable playableObj;
+//    Playable playableObj;
 
 
 	//Each frame of the behaviour
@@ -185,7 +185,7 @@ public class RPGTalkCinematicBehaviour : PlayableBehaviour
 				rpgTime = m_TrackBinding.GetComponent<RPGTalkTimeline> ();
 			}
 
-            playableObj = playable;
+           // playableObj = playable;
 
 		}
 
