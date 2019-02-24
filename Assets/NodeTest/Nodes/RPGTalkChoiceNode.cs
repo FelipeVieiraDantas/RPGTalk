@@ -65,6 +65,10 @@ namespace RPGTALK.Nodes
 
         public override void NodeGUI()
         {
+            if (attachedTo != null && attachedTo.choices.IndexOf(this) == -1)
+            {
+                EditorGUILayout.HelpBox("Something bad happened. Please reload your TXT =( Node Editor still in BETA, we will try our best to figure this out", MessageType.Error);
+            }
             scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.Height(100));
             EditorStyles.textField.wordWrap = true;
             DialogLine = EditorGUILayout.TextArea(DialogLine, GUILayout.ExpandHeight(true), GUILayout.Width(140));

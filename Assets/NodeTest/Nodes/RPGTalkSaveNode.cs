@@ -66,6 +66,11 @@ namespace RPGTALK.Nodes
 
         public override void NodeGUI()
         {
+            if(attachedTo != null && attachedTo.saves.IndexOf(this) == -1)
+            {
+                EditorGUILayout.HelpBox("Something bad happened. Please reload your TXT =( Node Editor still in BETA, we will try our best to figure this out", MessageType.Error);
+            }
+
             EditorGUILayout.HelpBox("Write below the ID of the saved statement. For questions answered, this is the id of the question.", MessageType.Info);
             scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.Height(50));
             EditorStyles.textField.wordWrap = true;

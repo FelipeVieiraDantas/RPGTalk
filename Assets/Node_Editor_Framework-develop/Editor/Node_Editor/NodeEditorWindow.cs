@@ -21,12 +21,15 @@ namespace NodeEditorFramework.Standard
 		private Rect canvasWindowRect { get { return new Rect(0, editorInterface.toolbarHeight, position.width, position.height - editorInterface.toolbarHeight); } }
 
 
-		#region General 
+        #region General 
 
-		/// <summary>
-		/// Opens the Node Editor window and loads the last session
-		/// </summary>
-		[MenuItem("Window/Node Editor")]
+        //RPGTalk changed to make it to LockReloadAssemblies preventing the bug that makes choices and saves becoming -1. This a provisory workaround. Needs to be revised
+        //Also changed the names to make it easier for the noob user
+
+        /// <summary>
+        /// Opens the Node Editor window and loads the last session
+        /// </summary>
+        [MenuItem("RPGTalk/Node Editor - BETA")]
 		public static NodeEditorWindow OpenNodeEditor () 
 		{
 			_editor = GetWindow<NodeEditorWindow>();
@@ -34,7 +37,7 @@ namespace NodeEditorFramework.Standard
 
 			NodeEditor.ReInit (false);
 			Texture iconTexture = ResourceManager.LoadTexture (EditorGUIUtility.isProSkin? "Textures/Icon_Dark.png" : "Textures/Icon_Light.png");
-			_editor.titleContent = new GUIContent ("Node Editor", iconTexture);
+			_editor.titleContent = new GUIContent ("Node Editor - BETA", iconTexture);
 
 			return _editor;
 		}
@@ -70,9 +73,16 @@ namespace NodeEditorFramework.Standard
 			EditorLoadingControl.justOpenedNewScene += NormalReInit;
 			SceneView.onSceneGUIDelegate -= OnSceneGUI;
 			SceneView.onSceneGUIDelegate += OnSceneGUI;
-		}
-		
-		private void OnDestroy()
+
+            EditorApplication.LockReloadAssemblies();
+        }
+
+        void OnDisable()
+        {
+            EditorApplication.UnlockReloadAssemblies();
+        }
+
+        private void OnDestroy()
 		{
 			// Unsubscribe from events
 			NodeEditor.ClientRepaints -= Repaint;

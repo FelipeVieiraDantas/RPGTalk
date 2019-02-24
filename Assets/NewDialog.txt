@@ -1,24 +1,19 @@
-Eita nois [jitter=1] funcionou [/jitter] mesmo!
-Mas será que [jitter=1 angle=0.5] funcionou [/jitter] mesmo?
-Eu [jitter=25 angle=0]acho[/jitter] que funcionou sim
-doido de mais meu amigo. Agora um texto normal e vamo nessa
-
-
 [title=Cutscene_0_begin]
-Girl:Tesadasd
-[question=TypeyourquestionIDhere]E-tchala
-[choice]E-tchala[newtalk start=FollowUp_Cutscene_1_Choice_0_begin break=FollowUp_Cutscene_1_Choice_0_end]
-[choice]E-tchala
-[choice]E-tchala
+FunnyGuy:First Line
+*PlayerName*:[expression=cry][question=TypeyourquestionIDhere] Second and question
+[choice]Choice 1[newtalk start=FollowUp_Cutscene_0_Choice_0_begin break=FollowUp_Cutscene_0_Choice_0_end]
+[choice]Choice 2[newtalk start=FollowUp_Cutscene_0_Choice_1_begin break=FollowUp_Cutscene_0_Choice_1_end]
+[choice]Choice 3[newtalk start=Cutscene_0_begin break=Cutscene_0_end]
 [title=Cutscene_0_end]
-[title=FollowUp_FollowUp_Cutscene_1_Choice_0_SaveNode_0_begin]
-E-tchala
-[title=FollowUp_FollowUp_Cutscene_1_Choice_0_SaveNode_0_end]
-[title=FollowUp_Cutscene_1_Choice_0_begin]
-E-tchala
-[save  start=FollowUp_FollowUp_Cutscene_1_Choice_0_SaveNode_0_begin break=FollowUp_FollowUp_Cutscene_1_Choice_0_SaveNode_0_end data=IDOfQuestion mod=0]
-[save  start=FollowUp_FollowUp_Cutscene_1_Choice_0_SaveNode_1_begin break=FollowUp_FollowUp_Cutscene_1_Choice_0_SaveNode_1_end data=IDOfQuestion mod=1]
-[title=FollowUp_Cutscene_1_Choice_0_end]
-[title=FollowUp_FollowUp_Cutscene_1_Choice_0_SaveNode_1_begin]
-E-tchala
-[title=FollowUp_FollowUp_Cutscene_1_Choice_0_SaveNode_1_end]
+[title=FollowUp_Cutscene_0_Choice_1_begin]
+*PlayerName*:Follow up choice 2
+Girl:Yeah! Follow this shit up
+[title=FollowUp_Cutscene_0_Choice_1_end]
+[title=FollowUp_FollowUp_Cutscene_0_Choice_0_SaveNode_0_begin]
+FunnyGuy:Frase depois do save
+[title=FollowUp_FollowUp_Cutscene_0_Choice_0_SaveNode_0_end]
+[title=FollowUp_Cutscene_0_Choice_0_begin]
+FunnyGuy:Follow up choice 1
+[save start=FollowUp_FollowUp_Cutscene_0_Choice_0_SaveNode_0_begin break=FollowUp_FollowUp_Cutscene_0_Choice_0_SaveNode_0_end data=eitanoisa mod=20]
+[save start=Cutscene_0_begin break=Cutscene_0_end data=IDOfQuestion mod=0]
+[title=FollowUp_Cutscene_0_Choice_0_end]

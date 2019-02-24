@@ -66,15 +66,14 @@ namespace RPGTALK.Nodes
         public int expressionID;
         int oldExpressionID;
 
-        public List<RPGTalkChoiceNode> choices = new List<RPGTalkChoiceNode>();
+        public List<RPGTalkChoiceNode> choices;
         public string questionID = "Type your question ID here";
         public RPGTalkChoiceNode attachedToChoice;
 
         public int lineInTxt;
 
-        public List<RPGTalkSaveNode> saves = new List<RPGTalkSaveNode>();
+        public List<RPGTalkSaveNode> saves;
         public RPGTalkSaveNode attachedToSave;
-
 
         //Next Node to go to
         [ValueConnectionKnob("To Where", Direction.Out, "RPGTalkForward", NodeSide.Right, MaxConnectionCount = ConnectionCount.Multi)]
@@ -92,6 +91,8 @@ namespace RPGTALK.Nodes
             startOfCutscene = true;
             characters = (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetallCharactersNames();
             lineInTxt = (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetNextLineInTxt() + 1; //when create, it doesn't count with myself.
+            choices = new List<RPGTalkChoiceNode>();
+            saves = new List<RPGTalkSaveNode>();
         }
 
         public override void NodeGUI()
@@ -104,22 +105,26 @@ namespace RPGTALK.Nodes
             GUILayout.BeginHorizontal();
             CharacterPotrait = (Sprite)EditorGUILayout.ObjectField(CharacterPotrait, typeof(Sprite), false, GUILayout.Width(65f), GUILayout.Height(65f));
             EditorGUILayout.BeginVertical();
-            if (characters != null)
+
+            if(characters == null)
             {
-                characterID = EditorGUILayout.Popup(characterID, characters);
-                if (characterID != oldCharacterID)
-                {
-                    oldCharacterID = characterID;
-                    if (characterID == 0)
-                    {
-                        CharacterPotrait = null;
-                        expressions = null;
-                        return;
-                    }
-                    CharacterPotrait = (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetAllCharactersInGame()[characterID - 1].photo;
-                    expressions = (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetExpressionsNamesByCharacterName(characters[characterID - 1]);
-                }
+                characters = (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetallCharactersNames();
             }
+           
+            characterID = EditorGUILayout.Popup(characterID, characters);
+            if (characterID != oldCharacterID)
+            {
+                oldCharacterID = characterID;
+                if (characterID == 0)
+                {
+                    CharacterPotrait = null;
+                    expressions = null;
+                    return;
+                }
+                CharacterPotrait = (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetAllCharactersInGame()[characterID - 1].photo;
+                expressions = (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetExpressionsNamesByCharacterName(characters[characterID - 1]);
+            }
+            
             if (expressions != null && expressions.Length > 1)
             {
                 expressionID = EditorGUILayout.Popup(expressionID, expressions);
@@ -131,6 +136,7 @@ namespace RPGTALK.Nodes
                         CharacterPotrait = (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetAllCharactersInGame()[characterID - 1].photo;
                         return;
                     }
+                    expressions = (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetExpressionsNamesByCharacterName(characters[characterID - 1]);
                     CharacterPotrait = (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).expressions[expressionID - 1].photo;
                 }
             }
@@ -142,7 +148,10 @@ namespace RPGTALK.Nodes
             {
                 questionID = EditorGUILayout.TextField("Question ID:", questionID);
             }
-            GUILayout.Space(5);
+            else
+            {
+                EditorGUILayout.LabelField("You can tie Choices, or Saves or other Dialog to this node!");
+            }
 
             GUILayout.BeginHorizontal();
 
@@ -152,9 +161,7 @@ namespace RPGTALK.Nodes
             EditorStyles.textField.wordWrap = false;
             EditorGUILayout.EndScrollView();
             GUILayout.EndHorizontal();
-
         }
-
 
         protected internal override void OnAddConnection(ConnectionPort port, ConnectionPort connection)
         {
@@ -173,6 +180,7 @@ namespace RPGTALK.Nodes
                     if (attachedTo == null)
                     {
                         attachedTo = connection.body as RPGTalkNode;
+                        CutsceneTitle = attachedTo.CutsceneTitle;
                     }
                 }
                 else if (connection.body is RPGTalkChoiceNode)
@@ -210,7 +218,6 @@ namespace RPGTALK.Nodes
             }
             else
             {
-
                 //make sure that will be only one connection to RPGTalkNode
                 List<ConnectionPort> toDelete = new List<ConnectionPort>();
                 foreach (ConnectionPort connected in outputPorts[0].connections)
@@ -238,14 +245,10 @@ namespace RPGTALK.Nodes
                     }
                 }
 
-
                 foreach (ConnectionPort deleteMe in toDelete)
                 {
                     outputPorts[0].RemoveConnection(deleteMe);
                 }
-
-
-
 
                 //Add choice
                 if (connection.body is RPGTalkChoiceNode)
@@ -259,9 +262,7 @@ namespace RPGTALK.Nodes
                     saves.Add(connection.body as RPGTalkSaveNode);
                 }
 
-
             }
-
 
             (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetNextLineInTxt();
 
@@ -303,7 +304,6 @@ namespace RPGTALK.Nodes
             }
             else
             {
-
                 //Remove choice
                 if (connection.body is RPGTalkChoiceNode)
                 {
@@ -316,7 +316,6 @@ namespace RPGTALK.Nodes
                     saves.Remove(connection.body as RPGTalkSaveNode);
                 }
             }
-
 
             (NodeEditor.curNodeCanvas as RPGTalkNodeCanvas).GetNextLineInTxt();
 
@@ -335,7 +334,7 @@ namespace RPGTALK.Nodes
             {
                 toReturn += characters[characterID] + ":";
             }
-            if (expressionID != 0 && expressions.Length > expressionID)
+            if (expressionID != 0 && expressions!= null && expressions.Length > expressionID)
             {
 
                 toReturn += "[expression=" + expressions[expressionID] + "]";
@@ -435,11 +434,11 @@ namespace RPGTALK.Nodes
                                 int startchoice;
                                 if (int.TryParse(save.GetFollowUpTalkTile(), out startchoice))
                                 {
-                                    toReturn += " start=" + startchoice.ToString() + " break=" + save.GetFollowUpTalkBreak() + "_end";
+                                    toReturn += "start=" + startchoice.ToString() + " break=" + save.GetFollowUpTalkBreak() + "_end";
                                 }
                                 else
                                 {
-                                    toReturn += " start=" + save.GetFollowUpTalkTile() + "_begin break=" + save.GetFollowUpTalkBreak() + "_end";
+                                    toReturn += "start=" + save.GetFollowUpTalkTile() + "_begin break=" + save.GetFollowUpTalkBreak() + "_end";
                                 }
 
                             }
@@ -459,10 +458,7 @@ namespace RPGTALK.Nodes
             return toReturn;
         }
 
-
-
     }
-
 
     public class RPGTalkForwardType : ValueConnectionType // : IConnectionTypeDeclaration
     {

@@ -54,7 +54,6 @@ namespace RPGTALK.Helper
             EditorApplication.UnlockReloadAssemblies();
         }
 
-
         [MenuItem("RPGTalk/Configure")]
         public static void Config()
         {

@@ -151,8 +151,11 @@ namespace NodeEditorFramework
 					throw new UnityException ("Node Editor: Not installed in default directory '" + editorPath + "'! Correct path could not be detected! Please correct the editorPath variable in NodeEditor.cs!");
 				correctEditorPath = correctEditorPath.Substring (0, subFolderIndex);
 				
-				Debug.LogWarning ("Node Editor: Not installed in default directory '" + editorPath + "'! " +
+                //RPGTalk commented to make it easier for the noob user
+
+				/*Debug.LogWarning ("Node Editor: Not installed in default directory '" + editorPath + "'! " +
 								  "Editor-only automatic detection adjusted the path to " + correctEditorPath + ", but if you plan to use at runtime, please correct the editorPath variable in NodeEditor.cs!");
+								  */                                 
 				editorPath = correctEditorPath;
 			}
 	#endif
