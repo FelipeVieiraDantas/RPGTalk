@@ -15,6 +15,8 @@ namespace RPGTALK.Snippets
 
         RPGTalk rpgTalk;
 
+        List<string> savedInThisPlay = new List<string>();
+
         // Start is called before the first frame update
         void Start()
         {
@@ -32,6 +34,7 @@ namespace RPGTALK.Snippets
                 {
                     PlayerPrefs.Save();
                 }
+
             }
         }
 
@@ -40,9 +43,22 @@ namespace RPGTALK.Snippets
             rpgTalk.OnMadeChoice -= SaveData;
         }
 
+        void OnApplicationQuit()
+        {
+            if (!saveBetweenPlays)
+            {
+                foreach(string todestroy in savedInThisPlay)
+                {
+                    PlayerPrefs.DeleteKey(todestroy);
+                }
+                PlayerPrefs.Save();
+            }
+        }
+
         public void SaveData(string choiceID, int answerID)
         {
             PlayerPrefs.SetInt(choiceID, answerID);
+            savedInThisPlay.Add(choiceID);
             if (saveBetweenPlays)
             {
                 PlayerPrefs.Save();
@@ -52,6 +68,10 @@ namespace RPGTALK.Snippets
         public bool GetSavedData(string savedData, int modifier)
         {
             if (PlayerPrefs.HasKey(savedData) && PlayerPrefs.GetInt(savedData) == modifier)
+            {
+                return true;
+            }
+            else if(!PlayerPrefs.HasKey(savedData) && modifier == -1)
             {
                 return true;
             }

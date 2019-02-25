@@ -1,0 +1,35 @@
+[title=Cutscene_0_begin]
+*PlayerName*:Nice! You can start a talk using a button. This dialog window is also a button, you can click it to pass the talk!
+Girl:Exactly. This comportament is perfect for mobile games.
+*PlayerName*:Those arrows above our heads... They are also auto-created, right?
+Girl:Yes they are! RPGTalk smart pointer! Pretty useful for when you don't have the control to the exact character position.
+*PlayerName*:Pretty cool. The arrow indicating that the talk continues and the ability to follow characters are now snippets too, right? What else can they do?
+[save start=FollowUp_Cutscene_0_SaveNode_0_begin break=FollowUp_Cutscene_0_SaveNode_0_end data=FollowingSSQuestion mod=-1]
+[save start=FollowUp_Cutscene_0_SaveNode_1_begin break=FollowUp_Cutscene_0_SaveNode_1_end data=FollowingSSQuestion mod=0]
+[save start=FollowUp_Cutscene_0_SaveNode_2_begin break=FollowUp_Cutscene_0_SaveNode_2_end data=FollowingSSQuestion mod=1]
+[title=Cutscene_0_end]
+[title=FollowUp_Cutscene_0_SaveNode_0_begin]
+Girl:Well... You haven't played this demo before, right? It has the ability to save your choices and change the conversation based on it.
+*PlayerName*:Are you kidding!? That's why you know I haven't played this demo before! Come on! Make me a question so I can test it again!
+Girl:[question=FollowingSSQuestion]Ok... Hum... Are you already following Seize Studios on social media?
+[choice]Yes, I am![newtalk start=FollowUp_FollowUp_Cutscene_0_SaveNode_0_Choice_0_begin break=FollowUp_FollowUp_Cutscene_0_SaveNode_0_Choice_0_end]
+[choice]No, I'm not...[newtalk start=FollowUp_FollowUp_Cutscene_0_SaveNode_0_Choice_1_begin break=FollowUp_FollowUp_Cutscene_0_SaveNode_0_Choice_1_end]
+[title=FollowUp_Cutscene_0_SaveNode_0_end]
+[title=FollowUp_FollowUp_Cutscene_0_SaveNode_0_Choice_0_begin]
+Girl:Nice! This is the best way to show your support for such an amazing and free asset! Now Start the talk again and see my lines changing.
+[title=FollowUp_FollowUp_Cutscene_0_SaveNode_0_Choice_0_end]
+[title=FollowUp_FollowUp_Cutscene_0_SaveNode_0_Choice_1_begin]
+Girl:Wow... Why not? They did their best to deliver this awesome and free asset. You should follow them! Either way, Start the talk again and see my lines changing.
+[title=FollowUp_FollowUp_Cutscene_0_SaveNode_0_Choice_1_end]
+[title=FollowUp_Cutscene_0_SaveNode_1_begin]
+Girl:We already had this conversation today! And you said you were following Seize Studios on social media. I'm going to believe in you! That is very important.
+[title=FollowUp_Cutscene_0_SaveNode_1_end]
+[title=FollowUp_Cutscene_0_SaveNode_2_begin]
+Girl:I won't talk to you anymore, you said you weren't following Seize Studios on social media =(
+[title=FollowUp_Cutscene_0_SaveNode_2_end]
+
+
+[title=TMPdemo_begin]
+Text Mesh Pro is fully supported! They way it does sprites change a little bit, be sure to check the Documentation.
+Also, with it you can use the [jitter=5 angle=1]jitter[/jitter] tag! a nice way of saying something [jitter=10 angle=5]spooky[/jitter]
+[title=TMPdemo_end]

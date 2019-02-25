@@ -6,6 +6,29 @@ Be sure to show your support, following us on the Social Medias:
 Facebook: https://www.facebook.com/seizestudios/
 Twitter: https://twitter.com/seizestudios
 
+######### What's new? Version 1.3 #########
+Version 1.3:
+
+-Talks can pass itselfs
+-TextUI now accepts Text Mesh Pro classes
+-Language is easier to set
+-Characters now can be set differently, and have its own expressions or animators.
+-Follow character now is a snippet
+-The "Can pass" signal is now a snippet
+-We have a smart pointer, a snippet for Line Renderers pointers.
+-Save Instance snippet, making it easier to change dialog based on saved conversations
+-NewTalk tag, making it easier to change the dialog midway
+-Jitter tag for TMP, making part of the text Jitter
+-BETA: Node Editor! Visually change your TXTs instead of writting it outside Unity.
+
+Note: Every time that you update a Plugin, backup your project.
+A lot has changed in RPGTalk base on this update to accept TMP.
+You can loose your TextUI and DialogerUI references.
+The way the Dialog Window follow a character has also changed, you will need to revision it.
+Localisation have changed so it have to be set on a Asset.
+
+#########
+
 
 ######### What's new? Version 1.2 #########
 Version 1.2:
@@ -40,7 +63,8 @@ The Font was Visitor, author unknow (http://www.dafont.com/visitor.font)
 
 The coin animation is from Tutpad (https://www.tutpad.com/tutorials/how-to-create-an-animated-pixel-art-coin)
 
-The sprites and voices in the Timeline demo are form our beloved Unity-chan © UTJ/UCL (http://unity-chan.com/)
+The sprites and voices in the Timeline demo are from our beloved Unity-chan © UTJ/UCL (http://unity-chan.com/)
 
+Node Editor was created based on the awesome Node Editor Framework by Levin Gäher (http://www.levingaeher.com/NodeEditor/index.html)
 
 ###############################################################################

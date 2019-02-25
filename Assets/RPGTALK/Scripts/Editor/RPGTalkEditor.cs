@@ -93,8 +93,10 @@ public class RPGTalkEditor : Editor
 			EditorGUI.indentLevel--;
 
 		}
+        EditorGUILayout.LabelField("If lines to start and break were changed during the talk:");
+        rpgTalk.goBackToOriginalStartAndBreak = GUILayout.Toggle(rpgTalk.goBackToOriginalStartAndBreak, "They should be changed back when it finish");
 
-		EditorGUILayout.EndVertical ();
+        EditorGUILayout.EndVertical ();
 
 
         if (rpgTalk.dialoger)

@@ -329,6 +329,14 @@ public class RPGTalk : MonoBehaviour {
     /// </summary>
     public RPGTalkSaveInstance saveInstance;
 
+    /// <summary>
+    /// Sometimes the line to start and break may be changing during a talk. With this option marked, end the talk finish it will return to the original ones
+    /// </summary>
+    public bool goBackToOriginalStartAndBreak = true;
+    string originalLineToStart;
+    string originalLineToBreak;
+
+
 
     void Start(){
         //Get the TMP_Translate Object
@@ -428,6 +436,14 @@ public class RPGTalk : MonoBehaviour {
         //check if we have the dubsounds component on
         if (dubSounds == null) {
             dubSounds = GetComponent<RPGTalkDubSounds> ();
+        }
+
+
+        //save the original lines to start and break if we want to revert to them later
+        if (string.IsNullOrEmpty(originalLineToStart))
+        {
+            originalLineToStart = lineToStart;
+            originalLineToBreak = lineToBreak;
         }
 
 
@@ -1906,8 +1922,18 @@ public class RPGTalk : MonoBehaviour {
             return;
         }
 
+        //We won't be able to pass if you have to answer a question
+        foreach (RPGTalkQuestion q in questions)
+        {
+            if (q.lineWithQuestion == cutscenePosition - 1 && !q.alreadyHappen)
+            {
+                return;
+            }
+        }
+
+
         //call the event
-        if(OnPlayNext != null){
+        if (OnPlayNext != null){
             OnPlayNext ();
         }
 
@@ -2058,6 +2084,17 @@ public class RPGTalk : MonoBehaviour {
             }
 
             callback.Invoke();
+
+
+            //if we want to go back to the original talk lines
+            if (goBackToOriginalStartAndBreak)
+            {
+                lineToStart = originalLineToStart;
+                lineToBreak = originalLineToBreak;
+                originalLineToStart = "";
+                originalLineToBreak = "";
+            }
+
         }
 
         
