@@ -63,6 +63,10 @@ public class RPGTalkAreaEditor : Editor {
         if (area.happenOnlyOnce)
         {
             area.saveAlreadyHappened = GUILayout.Toggle(area.saveAlreadyHappened, "Save if this area has already played");
+            if(area.saveAlreadyHappened && (area.rpgtalkTarget == null || !area.rpgtalkTarget.GetComponent<RPGTALK.Snippets.RPGTalkSaveInstance>()))
+            {
+                EditorGUILayout.HelpBox("A Save Instance Snippet should be on the RPGTalk holder to save this option.", MessageType.Warning, true);
+            }
         }
         if (serializedObject.FindProperty ("rpgtalkTarget").objectReferenceValue != null) {
 			area.forbidPlayIfRpgtalkIsPlaying = GUILayout.Toggle (area.forbidPlayIfRpgtalkIsPlaying, "Cannot be played if the RPGTalk instance is already playing");

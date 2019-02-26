@@ -9,7 +9,7 @@ Twitter: https://twitter.com/seizestudios
 ######### What's new? Version 1.3 #########
 Version 1.3:
 
--Talks can pass itselfs
+-Talks can pass themselves
 -TextUI now accepts Text Mesh Pro classes
 -Language is easier to set
 -Characters now can be set differently, and have its own expressions or animators.
@@ -19,13 +19,14 @@ Version 1.3:
 -Save Instance snippet, making it easier to change dialog based on saved conversations
 -NewTalk tag, making it easier to change the dialog midway
 -Jitter tag for TMP, making part of the text Jitter
--BETA: Node Editor! Visually change your TXTs instead of writting it outside Unity.
+-BETA: Node Editor! Visually change your TXTs instead of writing it outside Unity.
 
 Note: Every time that you update a Plugin, backup your project.
 A lot has changed in RPGTalk base on this update to accept TMP.
 You can loose your TextUI and DialogerUI references.
 The way the Dialog Window follow a character has also changed, you will need to revision it.
-Localisation have changed so it have to be set on a Asset.
+Localisation have changed so it have to be set on an Asset.
+The Callback on RPGTalkHolder is now a UnityEvent. You will loose your previous references.
 
 #########
 

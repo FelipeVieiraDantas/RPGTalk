@@ -2069,7 +2069,7 @@ public class RPGTalk : MonoBehaviour {
             }
 
 
-            isPlaying = false;
+            StartCoroutine(GoBackIsPlaying());
 
             if (!shouldStayOnScreen) {
                 textUI.Enabled(false);
@@ -2098,6 +2098,13 @@ public class RPGTalk : MonoBehaviour {
         }
 
         
+    }
+
+    //Wait a frame to make the isPlaying false, so we try not to play a area and pass a talk at the same time
+    IEnumerator GoBackIsPlaying()
+    {
+        yield return new WaitForEndOfFrame();
+        isPlaying = false;
     }
 
     //This function play the right bools on the animator.

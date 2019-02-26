@@ -80,6 +80,8 @@ namespace RPGTALK.Snippets
             if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceOverlay)
             {
                 newPos = basedOnWhatCamera.WorldToScreenPoint(newPos);
+                //If it is behind the camera, we don't want to display it
+                dialogWindow.gameObject.SetActive(newPos.z > 0);
             }
 
 
@@ -173,10 +175,9 @@ namespace RPGTALK.Snippets
                     }
 
 
-                    Debug.Log(pointerPos);
                     Vector3 followingPoint = rpgTalk.following.position + rpgTalk.followingOffset;
                     Vector3 followingPointScreen = basedOnWhatCamera.WorldToScreenPoint(followingPoint);
-                    Debug.Log(followingPointScreen);
+
                     Vector3 directionBetweenPoints = (pointerPos - dialogWindow.position).normalized;
 
                     Vector3 appliedOffset = pointerInitialOffset;
@@ -188,7 +189,6 @@ namespace RPGTALK.Snippets
                     Vector3 cornerOnWorld = basedOnWhatCamera.ScreenToWorldPoint(pointerPos + appliedOffset);
                     Vector3 followOnWorld = basedOnWhatCamera.ScreenToWorldPoint(followingPointScreen);
 
-                    Debug.Log(cornerOnWorld);
 
                     pointer.position = cornerOnWorld;
                     smartPointer.endPoint = followOnWorld;
