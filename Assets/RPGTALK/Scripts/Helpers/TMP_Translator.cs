@@ -93,7 +93,7 @@ namespace RPGTALK.Texts
 
         void DebugError()
         {
-            Debug.LogError("The object setted on RPGTalk wasn't a Text or a Text Mesh Pro UGUI. Be sure to check RPGTalk Configuration if you wnat to use the later.");
+            Debug.LogError("The object setted on RPGTalk wasn't a Text or a Text Mesh Pro UGUI. Be sure to check RPGTalk Configuration if you want to use the later.");
         }
 
 
